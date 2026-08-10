@@ -53,15 +53,27 @@ export default function ModelCard({
       </div>
 
       <div className="mt-5">
-        <Countdown
-          label={countdown.label}
-          target={snapshot.boundary.at}
-          now={now}
-          tone={countdown.tone}
-          boundaryPreposition={countdown.boundaryPreposition}
-          displayTz={displayTz}
-          hour12={hour12}
-        />
+        {countdown === null ? (
+          <div>
+            <div className="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
+              Can code
+            </div>
+            <div className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+              No peak or discount windows — always a good time to code
+            </div>
+          </div>
+        ) : (
+          // countdownFor returns null exactly when boundary is null, so boundary is set here.
+          <Countdown
+            label={countdown.label}
+            target={snapshot.boundary!.at}
+            now={now}
+            tone={countdown.tone}
+            boundaryPreposition={countdown.boundaryPreposition}
+            displayTz={displayTz}
+            hour12={hour12}
+          />
+        )}
       </div>
 
       <UpcomingWindows

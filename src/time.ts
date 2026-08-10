@@ -45,7 +45,8 @@ export interface WindowOccurrence {
 export interface ModelSnapshot {
   id: string;
   status: ModelStatus;
-  boundary: Boundary;
+  /** Null when the model has no windows — e.g. flat pricing, nothing to count down to. */
+  boundary: Boundary | null;
   upcoming: WindowOccurrence[];
 }
 
@@ -60,7 +61,7 @@ export interface SnapshotJson {
   models: {
     id: string;
     status: ModelStatus;
-    boundary: { kind: WindowKind; isStart: boolean; at: string };
+    boundary: { kind: WindowKind; isStart: boolean; at: string } | null;
     upcoming: { kind: WindowKind; start: string; end: string }[];
   }[];
 }
@@ -71,7 +72,10 @@ export function reviveSnapshot(raw: SnapshotJson): Snapshot {
     models: raw.models.map((model) => ({
       id: model.id,
       status: model.status,
-      boundary: { kind: model.boundary.kind, isStart: model.boundary.isStart, at: new Date(model.boundary.at) },
+      boundary:
+        model.boundary === null
+          ? null
+          : { kind: model.boundary.kind, isStart: model.boundary.isStart, at: new Date(model.boundary.at) },
       upcoming: model.upcoming.map((w) => ({ kind: w.kind, start: new Date(w.start), end: new Date(w.end) })),
     })),
   };
@@ -221,8 +225,10 @@ const BOUNDARY_SCAN_DAYS = 8;
 /**
  * The earliest future instant where this model's status changes — the countdown target.
  * It is the end of the current window when one is active, otherwise the next window's start.
+ * Null when the model has no windows — its status never changes (e.g. flat pricing).
  */
-export function getNextBoundary(now: Date, model: ModelConfig): Boundary {
+export function getNextBoundary(now: Date, model: ModelConfig): Boundary | null {
+  if (model.windows.length === 0) return null;
   const today = getWallParts(model.timezone, now);
   const candidates: Boundary[] = [];
 

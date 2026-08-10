@@ -27,6 +27,8 @@ export default function UpcomingWindows({
   displayTz,
   hour12
 }: UpcomingWindowsProps) {
+  // A model with no windows (flat pricing) has nothing upcoming — hide the section.
+  if (windows.length === 0) return null;
   return (
     <div className="mt-5 border-t border-zinc-200 pt-4 dark:border-white/10">
       <div className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-500">

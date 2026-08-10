@@ -31,6 +31,14 @@
       "windows": [
         { "type": "discount", "start": "21:00", "end": "05:00" }
       ]
+    },
+    {
+      "id": "kimi",
+      "name": "Kimi K3",
+      "timezone": "Asia/Karachi",
+      "note": "No peak or discount windows",
+      "sourceUrl": "https://platform.kimi.com/docs/pricing/chat",
+      "windows": []
     }
   ]
 }

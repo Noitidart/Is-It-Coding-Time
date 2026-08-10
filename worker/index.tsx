@@ -37,6 +37,17 @@ export default {
         if (!modelConfig) {
           throw new Error(`dev-error: no config for snapshot model ${model.id} but snapshots are computed from this config`);
         }
+        // A model with no windows (flat pricing) never changes state: canCode stays
+        // true forever, so there is no end or next state to report.
+        if (model.boundary === null) {
+          return {
+            id: model.id,
+            ...statusFlags(model.status),
+            endsAt: null,
+            millisUntilEndsAt: null,
+            next: null
+          };
+        }
         const endsAt = model.boundary.at;
         // Windows are half-open [start, end): the instant the current window
         // ends, the next state already governs — so the status at the boundary
@@ -58,7 +69,7 @@ export default {
         {
           computedAt: now.toISOString(),
           instruction:
-            'Spawn every model where canCode is true; do not spawn where it is false. discount/peak describe the current window. endsAt is when the current state ends, next is the state that begins then (startsAt). The yes/no answer flips at startsAt only when next.canCode differs from canCode. millisUntilEndsAt/millisUntilStartsAt are milliseconds until then, counted from computedAt.',
+            'Spawn every model where canCode is true; do not spawn where it is false. discount/peak describe the current window. endsAt is when the current state ends, next is the state that begins then (startsAt); both are null when a model has flat pricing (no windows) — it is always canCode and its state never changes. The yes/no answer flips at startsAt only when next.canCode differs from canCode. millisUntilEndsAt/millisUntilStartsAt are milliseconds until then, counted from computedAt.',
           models
         },
         { headers: { 'Cache-Control': 'no-store' } }

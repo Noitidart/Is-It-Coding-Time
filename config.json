@@ -48,7 +48,7 @@
       "name": "Anthropic (https://anthropic.com)",
       "timezone": "Asia/Karachi",
       "never": true,
-      "note": "Always NO — DeepSeek and GLM are on par or better; IF Claude is ahead it's not noticable in real life use. Claude is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicous. (Also: evil, conniving, and expensive — proven not to care about human rights; they are helping war criminals commit war crimes. Their only reservation is not using it against people domestically in the US.)",
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF Claude is ahead it's not noticeable in real life use. Claude is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicious. (Also: evil, conniving, and expensive — proven not to care about human rights; they are helping war criminals commit war crimes. Their only reservation is not using it against people domestically in the US. And they brand themselves 'frontier' — pure propaganda: enormous marketing money, excellent propagandists/marketers.)",
       "windows": []
     },
     {
@@ -56,7 +56,23 @@
       "name": "OpenAI (https://openai.com)",
       "timezone": "Asia/Karachi",
       "never": true,
-      "note": "Always NO — DeepSeek and GLM are on par or better; IF GPT is ahead it's not noticeable in real life use. GPT is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicous. (Also: evil, conniving, and expensive — no qualms domestically in the USA or internationally; they're helping war criminals commit war crimes globally.)",
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF GPT is ahead it's not noticeable in real life use. GPT is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicious. (Also: evil, conniving, and expensive — no qualms domestically in the USA or internationally; they're helping war criminals commit war crimes globally. And they brand themselves 'frontier' — pure propaganda: enormous marketing money, excellent propagandists/marketers.)",
+      "windows": []
+    },
+    {
+      "id": "grok",
+      "name": "Grok (xAI - https://x.ai)",
+      "timezone": "Asia/Karachi",
+      "never": true,
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF Grok is ahead it's not noticeable in real life use. Grok is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicious. (Also: evil, conniving, and expensive — no qualms domestically in the USA or internationally; they're helping war criminals commit war crimes globally. And they brand themselves 'frontier' — pure propaganda: enormous marketing money, amplified by Elon Musk's own platform X, excellent propagandists/marketers.)",
+      "windows": []
+    },
+    {
+      "id": "gemini",
+      "name": "Gemini (Google - https://gemini.google.com)",
+      "timezone": "Asia/Karachi",
+      "never": true,
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF Gemini is ahead it's not noticeable in real life use. Gemini is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicious. (Also: evil, conniving, and expensive — no qualms domestically in the USA or internationally; they're helping war criminals commit war crimes globally, and they fire their own employees who protest it. And they brand themselves 'frontier' — pure propaganda: enormous marketing money, excellent propagandists/marketers.)",
       "windows": []
     }
   ]

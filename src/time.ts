@@ -258,7 +258,7 @@ export function getNextBoundary(now: Date, model: ModelConfig): Boundary {
   return candidates.reduce((soonest, candidate) => (candidate.at < soonest.at ? candidate : soonest));
 }
 
-/** The next occurrence of one window — the current one when it is active, else the next day's. */
+/** The next occurrence of one window that has not started yet — never the one currently active. */
 function nextOccurrence(now: Date, tz: string, today: WallParts, window: WindowEntry): WindowOccurrence | null {
   const startMinutes = parseTimeToMinutes(window.start);
   const endMinutes = parseTimeToMinutes(window.end);
@@ -284,7 +284,9 @@ function nextOccurrence(now: Date, tz: string, today: WallParts, window: WindowE
       Math.floor(endMinutes / 60),
       endMinutes % 60,
     );
-    if (end.getTime() > now.getTime()) {
+    // "Upcoming" means it has not begun: the active window (start <= now) must not
+    // appear here, so skip to its next occurrence.
+    if (start.getTime() > now.getTime()) {
       return { kind: window.type, start, end };
     }
   }

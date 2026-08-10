@@ -85,7 +85,7 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
   const displayTz = localTz ?? serverTz;
 
   return (
-    <div className="min-h-screen bg-zinc-100 text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
+    <div className="min-h-screen">
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Is it coding time?</h1>

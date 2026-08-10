@@ -1,1 +1,16 @@
 @import 'tailwindcss';
+
+/* Paint the canvas behind the app so overscroll (rubber-banding) shows the
+   same background as the page instead of the default white body, and set the
+   default text color here too — both inherit to the whole document. */
+html {
+  background-color: theme(--color-zinc-100);
+  color: theme(--color-zinc-900);
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: theme(--color-zinc-950);
+    color: theme(--color-zinc-100);
+  }
+}

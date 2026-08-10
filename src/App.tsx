@@ -86,7 +86,7 @@ export default function App({ serverTz, tzSource, serverSnapshot }: AppProps) {
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Is it coding time?</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Peak &amp; discount windows for your models</p>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Peak hours burn through your limits fast — code when it says YES</p>
         </div>
         <ViewToggle value={view} onChange={handleViewChange} />
       </header>
@@ -133,17 +133,24 @@ export default function App({ serverTz, tzSource, serverSnapshot }: AppProps) {
         )}
       </main>
 
-      {/* Only useful for curl/no-JS hits: once JS detects the exact local timezone,
-          the approximate IP line is noise for humans and disappears. */}
-      {!localTz && (
-        <footer className="mx-auto max-w-3xl px-6 pb-8 text-xs text-zinc-500">
+      <footer className="mx-auto max-w-3xl space-y-2 px-6 pb-8 text-xs text-zinc-500 dark:text-zinc-400">
+        <p>
+          How to read this page: <strong className="text-zinc-700 dark:text-zinc-200">YES</strong> = safe to use now
+          (off-peak or discount), <strong className="text-zinc-700 dark:text-zinc-200">NO</strong> = peak hours —
+          coding then burns through your limits fast, so wait for the next window. This page is machine-readable
+          too: point your orchestrator/coordinator bot at it and spawn every model marked YES — or use it manually
+          to pick which models to run right now.
+        </p>
+        {/* Only useful for curl/no-JS hits: once JS detects the exact local timezone,
+            the approximate IP line is noise for humans and disappears. */}
+        {!localTz && (
           <p>
             {tzSource === 'ip'
               ? `Timezone detected from your IP (approximate): ${serverTz}`
               : `Showing times in ${serverTz} (config fallback).`}
           </p>
-        </footer>
-      )}
+        )}
+      </footer>
     </div>
   );
 }

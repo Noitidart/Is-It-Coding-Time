@@ -43,7 +43,7 @@ export default function ModelCard({
                 rel="noreferrer"
                 className="underline-offset-2 hover:text-zinc-700 hover:underline dark:hover:text-zinc-200"
               >
-                View Source →
+                View Reference →
               </a>
             )}
           </p>

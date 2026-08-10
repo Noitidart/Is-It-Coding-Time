@@ -23,9 +23,13 @@ export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: 
           <ModelName model={model} />
         </div>
         {countdown === null ? (
-          // countdownFor returns null exactly when boundary is null (flat pricing).
-          <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-            Can code
+          // countdownFor returns null exactly when boundary is null (flat pricing or a `never` provider).
+          <div
+            className={`text-xs font-semibold uppercase tracking-wide ${
+              model.never ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
+            }`}
+          >
+            {model.never ? 'Never' : 'Can code'}
           </div>
         ) : (
           <div className={`text-xs font-semibold uppercase tracking-wide ${toneTextClasses[countdown.tone]}`}>

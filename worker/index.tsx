@@ -37,8 +37,9 @@ export default {
         if (!modelConfig) {
           throw new Error(`dev-error: no config for snapshot model ${model.id} but snapshots are computed from this config`);
         }
-        // A model with no windows (flat pricing) never changes state: canCode stays
-        // true forever, so there is no end or next state to report.
+        // No boundary means the status never changes: flat pricing (no windows)
+        // stays canCode true forever, a `never` provider stays canCode false
+        // forever. Either way there is no end or next state to report.
         if (model.boundary === null) {
           return {
             id: model.id,

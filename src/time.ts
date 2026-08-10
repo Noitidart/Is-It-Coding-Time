@@ -20,6 +20,11 @@ export interface ModelConfig {
   note?: string;
   sourceUrl?: string;
   windows: WindowEntry[];
+  /**
+   * Never allow coding for this provider — status is always peak (NO) and it has
+   * no countdown or upcoming windows. Use for providers you refuse to support.
+   */
+  never?: boolean;
 }
 
 export interface Config {
@@ -202,6 +207,8 @@ export function statusFlags(status: ModelStatus): { canCode: boolean; discount: 
 }
 
 export function getStatusAt(now: Date, model: ModelConfig): ModelStatus {
+  // A `never` provider is always peak, so the badge always reads NO.
+  if (model.never) return 'peak';
   const wall = getWallParts(model.timezone, now);
   const minutes = wall.hour * 60 + wall.minute;
   const weekday = weekdayOf(wall.year, wall.month, wall.day);

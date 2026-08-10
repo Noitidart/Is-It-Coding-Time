@@ -19,7 +19,12 @@
       "note": "3.0x Quota during Peak",
       "sourceUrl": "https://docs.z.ai/devpack/overview",
       "windows": [
-        { "type": "peak", "start": "11:00", "end": "15:00", "days": [1, 2, 3, 4, 5] }
+        {
+          "type": "peak",
+          "start": "11:00",
+          "end": "15:00",
+          "days": [1, 2, 3, 4, 5]
+        }
       ]
     },
     {
@@ -28,9 +33,7 @@
       "timezone": "Asia/Karachi",
       "note": "0.8x Price / 20% Off during Discount",
       "sourceUrl": "https://mimo.mi.com/docs/en-US/tokenplan/Token%20Plan/subscription?target=usage-quota",
-      "windows": [
-        { "type": "discount", "start": "21:00", "end": "05:00" }
-      ]
+      "windows": [{ "type": "discount", "start": "21:00", "end": "05:00" }]
     },
     {
       "id": "kimi",
@@ -38,6 +41,22 @@
       "timezone": "Asia/Karachi",
       "note": "No peak or discount windows",
       "sourceUrl": "https://platform.kimi.com/docs/pricing/chat",
+      "windows": []
+    },
+    {
+      "id": "anthropic",
+      "name": "Anthropic (https://anthropic.com)",
+      "timezone": "Asia/Karachi",
+      "never": true,
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF Claude is ahead it's not noticable in real life use. Claude is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicous. (Also: evil, conniving, and expensive — proven not to care about human rights; they are helping war criminals commit war crimes. Their only reservation is not using it against people domestically in the US.)",
+      "windows": []
+    },
+    {
+      "id": "openai",
+      "name": "OpenAI (https://openai.com)",
+      "timezone": "Asia/Karachi",
+      "never": true,
+      "note": "Always NO — DeepSeek and GLM are on par or better; IF GPT is ahead it's not noticeable in real life use. GPT is also known to make system changes it wasn't authorized to do, such as shutting down competing models with excuses that the others are malicous. (Also: evil, conniving, and expensive — no qualms domestically in the USA or internationally; they're helping war criminals commit war crimes globally.)",
       "windows": []
     }
   ]

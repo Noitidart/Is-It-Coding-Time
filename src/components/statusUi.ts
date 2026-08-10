@@ -32,14 +32,15 @@ export interface CountdownInfo {
 }
 
 export function countdownFor(status: ModelStatus, boundary: ModelSnapshot['boundary']): CountdownInfo | null {
+  // No boundary = status never changes (flat pricing or a `never` provider),
+  // so there is nothing to count down to.
+  if (boundary === null) return null;
   if (status === 'peak') {
     return { label: 'Can code again in', tone: 'red', boundaryPreposition: 'at' };
   }
   if (status === 'discount') {
     return { label: 'Can code with discount for', tone: 'green', boundaryPreposition: 'until' };
   }
-  // No windows (flat pricing): the status never changes, so there is nothing to count down to.
-  if (boundary === null) return null;
   // Off states: the next boundary is always the start of a window.
   const isPeakNext = boundary.kind === 'peak';
   return {

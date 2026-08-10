@@ -58,11 +58,19 @@ export default function ModelCard({
       <div className="mt-5">
         {countdown === null ? (
           <div>
-            <div className="text-sm font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">
-              Can code
+            <div
+              className={`text-sm font-semibold uppercase tracking-wide ${
+                model.never
+                  ? 'text-red-600 dark:text-red-400'
+                  : 'text-emerald-600 dark:text-emerald-400'
+              }`}
+            >
+              {model.never ? 'Never' : 'Can code'}
             </div>
             <div className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              No peak or discount windows — always a good time to code
+              {model.never
+                ? 'Never — not worth it, see note above'
+                : 'No peak or discount windows — always a good time to code'}
             </div>
           </div>
         ) : (

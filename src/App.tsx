@@ -99,7 +99,16 @@ export default function App({ serverTz, tzSource, serverSnapshot }: AppProps) {
               if (!modelSnapshot) {
                 throw new Error(`dev-error: snapshot missing for model ${model.id} but it was computed from this config`);
               }
-              return <CompactRow key={model.id} model={model} snapshot={modelSnapshot} now={effectiveNow} />;
+              return (
+                <CompactRow
+                  key={model.id}
+                  model={model}
+                  snapshot={modelSnapshot}
+                  now={effectiveNow}
+                  displayTz={displayTz}
+                  hour12={hour12}
+                />
+              );
             })}
           </div>
         ) : (

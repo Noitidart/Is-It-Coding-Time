@@ -1,0 +1,36 @@
+{
+  "timezone": "Asia/Karachi",
+  "models": [
+    {
+      "id": "deepseek",
+      "name": "DeepSeek",
+      "timezone": "Asia/Karachi",
+      "note": "2.0x Price during Peak",
+      "sourceUrl": "https://gist.github.com/Noitidart/1894f6b753825a36ac08735bbca525d8",
+      "windows": [
+        { "type": "peak", "start": "06:00", "end": "09:00" },
+        { "type": "peak", "start": "11:00", "end": "15:00" }
+      ]
+    },
+    {
+      "id": "glm",
+      "name": "GLM",
+      "timezone": "Asia/Karachi",
+      "note": "3.0x Quota during Peak",
+      "sourceUrl": "https://docs.z.ai/devpack/overview",
+      "windows": [
+        { "type": "peak", "start": "11:00", "end": "15:00", "days": [1, 2, 3, 4, 5] }
+      ]
+    },
+    {
+      "id": "mimo",
+      "name": "MiMo 2.5 Pro",
+      "timezone": "Asia/Karachi",
+      "note": "0.8x Price / 20% Off during Discount",
+      "sourceUrl": "https://mimo.mi.com/docs/en-US/tokenplan/Token%20Plan/subscription?target=usage-quota",
+      "windows": [
+        { "type": "discount", "start": "21:00", "end": "05:00" }
+      ]
+    }
+  ]
+}

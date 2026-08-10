@@ -80,9 +80,17 @@ export function reviveSnapshot(raw: SnapshotJson): Snapshot {
       boundary:
         model.boundary === null
           ? null
-          : { kind: model.boundary.kind, isStart: model.boundary.isStart, at: new Date(model.boundary.at) },
-      upcoming: model.upcoming.map((w) => ({ kind: w.kind, start: new Date(w.start), end: new Date(w.end) })),
-    })),
+          : {
+              kind: model.boundary.kind,
+              isStart: model.boundary.isStart,
+              at: new Date(model.boundary.at)
+            },
+      upcoming: model.upcoming.map((w) => ({
+        kind: w.kind,
+        start: new Date(w.start),
+        end: new Date(w.end)
+      }))
+    }))
   };
 }
 
@@ -108,7 +116,7 @@ function getWallParts(tz: string, date: Date): WallParts {
       day: '2-digit',
       hour: 'numeric',
       minute: 'numeric',
-      hourCycle: 'h23',
+      hourCycle: 'h23'
     });
     wallFormatterCache.set(tz, formatter);
   }
@@ -143,7 +151,10 @@ function getWallParts(tz: string, date: Date): WallParts {
 /** How far the timezone's wall clock is ahead of the given instant, in ms. */
 function getOffsetMs(tz: string, date: Date): number {
   const wall = getWallParts(tz, date);
-  return Date.UTC(wall.year, wall.month, wall.day, wall.hour, wall.minute) - date.getTime();
+  return (
+    Date.UTC(wall.year, wall.month, wall.day, wall.hour, wall.minute) -
+    date.getTime()
+  );
 }
 
 /**
@@ -157,10 +168,12 @@ export function getInstantForWallClock(
   month: number,
   day: number,
   hour: number,
-  minute: number,
+  minute: number
 ): Date {
   const approximateUtc = Date.UTC(year, month, day, hour, minute);
-  const firstPass = new Date(approximateUtc - getOffsetMs(tz, new Date(approximateUtc)));
+  const firstPass = new Date(
+    approximateUtc - getOffsetMs(tz, new Date(approximateUtc))
+  );
   return new Date(approximateUtc - getOffsetMs(tz, firstPass));
 }
 
@@ -198,11 +211,15 @@ export function getMinutesInTz(date: Date, tz: string): number {
 }
 
 /** The three booleans the API/UI expose; off-peak and off-discount differ only in the countdown label. */
-export function statusFlags(status: ModelStatus): { canCode: boolean; discount: boolean; peak: boolean } {
+export function statusFlags(status: ModelStatus): {
+  canCode: boolean;
+  discount: boolean;
+  peak: boolean;
+} {
   return {
     canCode: status !== 'peak',
     discount: status === 'discount',
-    peak: status === 'peak',
+    peak: status === 'peak'
   };
 }
 
@@ -214,14 +231,25 @@ export function getStatusAt(now: Date, model: ModelConfig): ModelStatus {
   const weekday = weekdayOf(wall.year, wall.month, wall.day);
   // Peak wins if a model ever defines overlapping peak and discount windows.
   for (const window of model.windows) {
-    if (window.type === 'peak' && windowAppliesOnDay(window, weekday) && minutesInWindow(minutes, window)) return 'peak';
+    if (
+      window.type === 'peak' &&
+      windowAppliesOnDay(window, weekday) &&
+      minutesInWindow(minutes, window)
+    )
+      return 'peak';
   }
   for (const window of model.windows) {
-    if (window.type === 'discount' && windowAppliesOnDay(window, weekday) && minutesInWindow(minutes, window)) {
+    if (
+      window.type === 'discount' &&
+      windowAppliesOnDay(window, weekday) &&
+      minutesInWindow(minutes, window)
+    ) {
       return 'discount';
     }
   }
-  const hasDiscount = model.windows.some((window) => window.type === 'discount');
+  const hasDiscount = model.windows.some(
+    (window) => window.type === 'discount'
+  );
   return hasDiscount ? 'off-discount' : 'off-peak';
 }
 
@@ -234,7 +262,10 @@ const BOUNDARY_SCAN_DAYS = 8;
  * It is the end of the current window when one is active, otherwise the next window's start.
  * Null when the model has no windows — its status never changes (e.g. flat pricing).
  */
-export function getNextBoundary(now: Date, model: ModelConfig): Boundary | null {
+export function getNextBoundary(
+  now: Date,
+  model: ModelConfig
+): Boundary | null {
   if (model.windows.length === 0) return null;
   const today = getWallParts(model.timezone, now);
   const candidates: Boundary[] = [];
@@ -253,48 +284,64 @@ export function getNextBoundary(now: Date, model: ModelConfig): Boundary | null 
         today.month,
         today.day + dayOffset,
         Math.floor(startMinutes / 60),
-        startMinutes % 60,
+        startMinutes % 60
       );
       // A window crossing midnight (start > end) ends on the NEXT wall day.
-      const endDayOffset = startMinutes > endMinutes ? dayOffset + 1 : dayOffset;
+      const endDayOffset =
+        startMinutes > endMinutes ? dayOffset + 1 : dayOffset;
       const end = getInstantForWallClock(
         model.timezone,
         today.year,
         today.month,
         today.day + endDayOffset,
         Math.floor(endMinutes / 60),
-        endMinutes % 60,
+        endMinutes % 60
       );
 
-      if (start.getTime() > now.getTime()) candidates.push({ kind: window.type, isStart: true, at: start });
-      if (end.getTime() > now.getTime()) candidates.push({ kind: window.type, isStart: false, at: end });
+      if (start.getTime() > now.getTime())
+        candidates.push({ kind: window.type, isStart: true, at: start });
+      if (end.getTime() > now.getTime())
+        candidates.push({ kind: window.type, isStart: false, at: end });
     }
   }
 
   if (candidates.length === 0) {
     throw new Error(
-      `dev-error: no future boundary for ${model.id}, but its windows recur weekly at most so one must exist`,
+      `dev-error: no future boundary for ${model.id}, but its windows recur weekly at most so one must exist`
     );
   }
 
-  return candidates.reduce((soonest, candidate) => (candidate.at < soonest.at ? candidate : soonest));
+  return candidates.reduce((soonest, candidate) =>
+    candidate.at < soonest.at ? candidate : soonest
+  );
 }
 
 /** The next occurrence of one window that has not started yet — never the one currently active. */
-function nextOccurrence(now: Date, tz: string, today: WallParts, window: WindowEntry): WindowOccurrence | null {
+function nextOccurrence(
+  now: Date,
+  tz: string,
+  today: WallParts,
+  window: WindowEntry
+): WindowOccurrence | null {
   const startMinutes = parseTimeToMinutes(window.start);
   const endMinutes = parseTimeToMinutes(window.end);
   if (startMinutes === endMinutes) return null;
 
   for (let dayOffset = 0; dayOffset < BOUNDARY_SCAN_DAYS; dayOffset++) {
-    if (!windowAppliesOnDay(window, weekdayOf(today.year, today.month, today.day + dayOffset))) continue;
+    if (
+      !windowAppliesOnDay(
+        window,
+        weekdayOf(today.year, today.month, today.day + dayOffset)
+      )
+    )
+      continue;
     const start = getInstantForWallClock(
       tz,
       today.year,
       today.month,
       today.day + dayOffset,
       Math.floor(startMinutes / 60),
-      startMinutes % 60,
+      startMinutes % 60
     );
     // A window crossing midnight (start > end) ends on the NEXT wall day.
     const endDayOffset = startMinutes > endMinutes ? dayOffset + 1 : dayOffset;
@@ -304,7 +351,7 @@ function nextOccurrence(now: Date, tz: string, today: WallParts, window: WindowE
       today.month,
       today.day + endDayOffset,
       Math.floor(endMinutes / 60),
-      endMinutes % 60,
+      endMinutes % 60
     );
     // "Upcoming" means it has not begun: the active window (start <= now) must not
     // appear here, so skip to its next occurrence.
@@ -316,7 +363,10 @@ function nextOccurrence(now: Date, tz: string, today: WallParts, window: WindowE
 }
 
 /** One upcoming occurrence per configured window (e.g. DeepSeek always shows its 2). */
-export function getUpcomingWindows(now: Date, model: ModelConfig): WindowOccurrence[] {
+export function getUpcomingWindows(
+  now: Date,
+  model: ModelConfig
+): WindowOccurrence[] {
   const today = getWallParts(model.timezone, now);
   return model.windows
     .map((window) => nextOccurrence(now, model.timezone, today, window))
@@ -331,8 +381,8 @@ export function computeSnapshot(now: Date, config: Config): Snapshot {
       id: model.id,
       status: getStatusAt(now, model),
       boundary: getNextBoundary(now, model),
-      upcoming: getUpcomingWindows(now, model),
-    })),
+      upcoming: getUpcomingWindows(now, model)
+    }))
   };
 }
 
@@ -347,7 +397,11 @@ export function formatDuration(remainingMs: number): string {
   return `${seconds}s`;
 }
 
-export function formatTimeInTz(tz: string, date: Date, hour12: boolean): string {
+export function formatTimeInTz(
+  tz: string,
+  date: Date,
+  hour12: boolean
+): string {
   const cacheKey = `${tz}:${hour12}`;
   let formatter = timeFormatterCache.get(cacheKey);
   if (!formatter) {
@@ -356,7 +410,7 @@ export function formatTimeInTz(tz: string, date: Date, hour12: boolean): string 
       // 12h hours conventionally have no leading zero ("6:00 PM"); 24h keeps it ("06:00").
       hour: hour12 ? 'numeric' : '2-digit',
       minute: '2-digit',
-      hour12,
+      hour12
     });
     timeFormatterCache.set(cacheKey, formatter);
   }

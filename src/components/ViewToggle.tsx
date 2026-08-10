@@ -7,7 +7,7 @@ interface ViewToggleProps {
 
 const options: { value: ViewChoice; label: string }[] = [
   { value: 'compact', label: 'Compact' },
-  { value: 'details', label: 'Details' },
+  { value: 'details', label: 'Details' }
 ];
 
 export default function ViewToggle({ value, onChange }: ViewToggleProps) {

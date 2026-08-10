@@ -12,7 +12,13 @@ interface CompactRowProps {
   hour12: boolean;
 }
 
-export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: CompactRowProps) {
+export default function CompactRow({
+  model,
+  snapshot,
+  now,
+  displayTz,
+  hour12
+}: CompactRowProps) {
   const badge = badgeFor(snapshot.status);
   const countdown = countdownFor(snapshot.status, snapshot.boundary);
 
@@ -26,13 +32,17 @@ export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: 
           // countdownFor returns null exactly when boundary is null (flat pricing or a `never` provider).
           <div
             className={`text-xs font-semibold uppercase tracking-wide ${
-              model.never ? 'text-red-600 dark:text-red-400' : 'text-emerald-600 dark:text-emerald-400'
+              model.never
+                ? 'text-red-600 dark:text-red-400'
+                : 'text-emerald-600 dark:text-emerald-400'
             }`}
           >
             {model.never ? 'Never' : 'Can code'}
           </div>
         ) : (
-          <div className={`text-xs font-semibold uppercase tracking-wide ${toneTextClasses[countdown.tone]}`}>
+          <div
+            className={`text-xs font-semibold uppercase tracking-wide ${toneTextClasses[countdown.tone]}`}
+          >
             {countdown.label}
           </div>
         )}
@@ -42,14 +52,19 @@ export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: 
           // countdownFor returns null exactly when boundary is null, so boundary is set here.
           <div className="text-right">
             <div className="font-mono text-lg tabular-nums">
-              {formatDuration(Math.max(0, snapshot.boundary!.at.getTime() - now.getTime()))}
+              {formatDuration(
+                Math.max(0, snapshot.boundary!.at.getTime() - now.getTime())
+              )}
             </div>
             <div className="text-xs text-zinc-500 dark:text-zinc-400">
-              {countdown.boundaryPreposition} {formatTimeInTz(displayTz, snapshot.boundary!.at, hour12)}
+              {countdown.boundaryPreposition}{' '}
+              {formatTimeInTz(displayTz, snapshot.boundary!.at, hour12)}
             </div>
           </div>
         )}
-        <div className={`rounded-md border px-3 py-1 text-lg font-bold ${badgeClasses[badge.tone]}`}>
+        <div
+          className={`rounded-md border px-3 py-1 text-lg font-bold ${badgeClasses[badge.tone]}`}
+        >
           {badge.text}
         </div>
       </div>

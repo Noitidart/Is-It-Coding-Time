@@ -25,7 +25,9 @@ export interface SsrPayload {
  * so detect by formatting: a 12-hour system never renders 13:00 as "13".
  */
 function detectHour12Preference(): boolean {
-  const formatted = new Intl.DateTimeFormat(undefined, { hour: 'numeric' }).format(new Date(2026, 0, 1, 13, 0));
+  const formatted = new Intl.DateTimeFormat(undefined, {
+    hour: 'numeric'
+  }).format(new Date(2026, 0, 1, 13, 0));
   return !formatted.includes('13');
 }
 
@@ -41,7 +43,12 @@ interface AppProps {
   serverSnapshot: Snapshot;
 }
 
-export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppProps) {
+export default function App({
+  origin,
+  serverTz,
+  tzSource,
+  serverSnapshot
+}: AppProps) {
   const now = useNow(1000);
   const [clientPrefs, setClientPrefs] = useState<ClientPrefs | null>(null);
   const [view, setView] = useState<ViewChoice>('compact');
@@ -67,7 +74,10 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
   useEffect(() => {
     // SSR always renders the default view; restore the saved preference after
     // hydration so the first paint still matches the server markup.
-    const savedView = loadStoredValue(VIEW_STORAGE_KEY, 'compact') === 'details' ? 'details' : 'compact';
+    const savedView =
+      loadStoredValue(VIEW_STORAGE_KEY, 'compact') === 'details'
+        ? 'details'
+        : 'compact';
     // eslint-disable-next-line react-hooks/set-state-in-effect -- one-time post-mount restore
     setView(savedView);
   }, []);
@@ -79,7 +89,10 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
 
   // Before mount, render the server snapshot verbatim (hydration must match SSR markup).
   // After mount, recompute every tick so status flips and countdowns stay live.
-  const snapshot = useMemo(() => (now ? computeSnapshot(now, config) : serverSnapshot), [now, serverSnapshot]);
+  const snapshot = useMemo(
+    () => (now ? computeSnapshot(now, config) : serverSnapshot),
+    [now, serverSnapshot]
+  );
   const effectiveNow = now ?? serverSnapshot.computedAt;
   // Times are always shown in the viewer's local timezone.
   const displayTz = localTz ?? serverTz;
@@ -88,8 +101,12 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
     <div className="min-h-screen">
       <header className="mx-auto flex max-w-3xl items-center justify-between gap-4 px-6 py-8">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Is it coding time?</h1>
-          <p className="text-sm text-zinc-500 dark:text-zinc-400">Peak hours burn through your limits fast — code when it says YES</p>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Is it coding time?
+          </h1>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            Peak hours burn through your limits fast — code when it says YES
+          </p>
         </div>
         <ViewToggle value={view} onChange={handleViewChange} />
       </header>
@@ -98,9 +115,13 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
         {view === 'compact' ? (
           <div className="space-y-2">
             {config.models.map((model) => {
-              const modelSnapshot = snapshot.models.find((m) => m.id === model.id);
+              const modelSnapshot = snapshot.models.find(
+                (m) => m.id === model.id
+              );
               if (!modelSnapshot) {
-                throw new Error(`dev-error: snapshot missing for model ${model.id} but it was computed from this config`);
+                throw new Error(
+                  `dev-error: snapshot missing for model ${model.id} but it was computed from this config`
+                );
               }
               return (
                 <CompactRow
@@ -117,9 +138,13 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
         ) : (
           <div className="space-y-6">
             {config.models.map((model) => {
-              const modelSnapshot = snapshot.models.find((m) => m.id === model.id);
+              const modelSnapshot = snapshot.models.find(
+                (m) => m.id === model.id
+              );
               if (!modelSnapshot) {
-                throw new Error(`dev-error: snapshot missing for model ${model.id} but it was computed from this config`);
+                throw new Error(
+                  `dev-error: snapshot missing for model ${model.id} but it was computed from this config`
+                );
               }
               return (
                 <ModelCard
@@ -138,14 +163,21 @@ export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppP
 
       <footer className="mx-auto max-w-3xl space-y-2 px-6 pb-8 text-xs text-zinc-500 dark:text-zinc-400">
         <p>
-          How to read this page: <strong className="text-zinc-700 dark:text-zinc-200">YES</strong> = safe to use now
-          (off-peak or discount), <strong className="text-zinc-700 dark:text-zinc-200">NO</strong> = peak hours —
-          coding then burns through your limits fast, so wait for the next window.
+          How to read this page:{' '}
+          <strong className="text-zinc-700 dark:text-zinc-200">YES</strong> =
+          safe to use now (off-peak or discount),{' '}
+          <strong className="text-zinc-700 dark:text-zinc-200">NO</strong> =
+          peak hours — coding then burns through your limits fast, so wait for
+          the next window.
         </p>
         <p>
-          For agents: <code className="font-mono text-zinc-700 dark:text-zinc-200">curl -s {origin}</code> returns
-          JSON with the spawn decision per model — point your orchestrator/coordinator bot at it and spawn every
-          model marked YES, or use the badges above to pick models manually.
+          For agents:{' '}
+          <code className="font-mono text-zinc-700 dark:text-zinc-200">
+            curl -s {origin}
+          </code>{' '}
+          returns JSON with the spawn decision per model — point your
+          orchestrator/coordinator bot at it and spawn every model marked YES,
+          or use the badges above to pick models manually.
         </p>
         {/* Only useful for curl/no-JS hits: once JS detects the exact local timezone,
             the approximate IP line is noise for humans and disappears. */}

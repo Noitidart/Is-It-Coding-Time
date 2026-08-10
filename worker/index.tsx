@@ -35,7 +35,9 @@ export default {
         // computeSnapshot maps over config.models in order, so indexes line up.
         const modelConfig = config.models[index];
         if (!modelConfig) {
-          throw new Error(`dev-error: no config for snapshot model ${model.id} but snapshots are computed from this config`);
+          throw new Error(
+            `dev-error: no config for snapshot model ${model.id} but snapshots are computed from this config`
+          );
         }
         // No boundary means the status never changes: flat pricing (no windows)
         // stays canCode true forever, a `never` provider stays canCode false
@@ -78,7 +80,12 @@ export default {
     }
 
     const body = renderToString(
-      <App serverTz={tz} tzSource={tzSource} serverSnapshot={snapshot} origin={origin} />
+      <App
+        serverTz={tz}
+        tzSource={tzSource}
+        serverSnapshot={snapshot}
+        origin={origin}
+      />
     );
     const ssrPayload = JSON.stringify({ origin, tz, tzSource, snapshot });
 

@@ -25,7 +25,7 @@ export interface CountdownInfo {
   tone: Tone;
   /**
    * Preposition for the compact "… 11:00 AM" line: "until" when the countdown ends
-   * your current state (Can code for, Time left in discount), "at" when it marks a
+   * your current state (Can code for, Can code with discount for), "at" when it marks a
    * new state beginning (Can code again in, Discount starts in).
    */
   boundaryPreposition: 'until' | 'at';
@@ -36,7 +36,7 @@ export function countdownFor(status: ModelStatus, boundary: ModelSnapshot['bound
     return { label: 'Can code again in', tone: 'red', boundaryPreposition: 'at' };
   }
   if (status === 'discount') {
-    return { label: 'Time left in discount', tone: 'green', boundaryPreposition: 'until' };
+    return { label: 'Can code with discount for', tone: 'green', boundaryPreposition: 'until' };
   }
   // Off states: the next boundary is always the start of a window.
   const isPeakNext = boundary.kind === 'peak';

@@ -30,6 +30,8 @@ export default {
     const tzSource = request.cf?.timezone ? 'ip' : 'config';
     const now = new Date();
     const snapshot = computeSnapshot(now, config);
+    // The site's own origin, so the footer can show the real curl command.
+    const origin = new URL(request.url).origin;
 
     // This is a page request (asset is text/html), but the client doesn't want
     // HTML — bots and coordinator scripts (curl defaults to `Accept: */*`) get
@@ -60,9 +62,9 @@ export default {
     }
 
     const body = renderToString(
-      <App serverTz={tz} tzSource={tzSource} serverSnapshot={snapshot} />
+      <App serverTz={tz} tzSource={tzSource} serverSnapshot={snapshot} origin={origin} />
     );
-    const ssrPayload = JSON.stringify({ tz, tzSource, snapshot });
+    const ssrPayload = JSON.stringify({ origin, tz, tzSource, snapshot });
 
     const ssrResponse = new HTMLRewriter()
       .on('#root', {

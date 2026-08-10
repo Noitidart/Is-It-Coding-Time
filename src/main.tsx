@@ -18,6 +18,6 @@ if (!payload) {
 hydrateRoot(
   document.getElementById('root')!,
   <StrictMode>
-    <App serverTz={payload.tz} tzSource={payload.tzSource} serverSnapshot={reviveSnapshot(payload.snapshot)} />
+    <App origin={payload.origin} serverTz={payload.tz} tzSource={payload.tzSource} serverSnapshot={reviveSnapshot(payload.snapshot)} />
   </StrictMode>,
 );

@@ -1,11 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
-import { config } from './config';
-import { loadStoredValue, storeValue } from './storage';
-import { computeSnapshot, type Snapshot, type SnapshotJson } from './time';
 import CompactRow from './components/CompactRow';
 import ModelCard from './components/ModelCard';
 import ViewToggle, { type ViewChoice } from './components/ViewToggle';
+import { config } from './config';
 import { useNow } from './hooks/useNow';
+import { loadStoredValue, storeValue } from './storage';
+import { computeSnapshot, type Snapshot, type SnapshotJson } from './time';
 
 export type TzSource = 'ip' | 'config';
 
@@ -13,6 +13,8 @@ const VIEW_STORAGE_KEY = 'ict-view';
 
 /** What the worker embeds in the page for hydration — snapshot dates are ISO strings here. */
 export interface SsrPayload {
+  /** The site's own origin, so the footer can show the real curl command. */
+  origin: string;
   tz: string;
   tzSource: TzSource;
   snapshot: SnapshotJson;
@@ -33,12 +35,13 @@ interface ClientPrefs {
 }
 
 interface AppProps {
+  origin: string;
   serverTz: string;
   tzSource: TzSource;
   serverSnapshot: Snapshot;
 }
 
-export default function App({ serverTz, tzSource, serverSnapshot }: AppProps) {
+export default function App({ origin, serverTz, tzSource, serverSnapshot }: AppProps) {
   const now = useNow(1000);
   const [clientPrefs, setClientPrefs] = useState<ClientPrefs | null>(null);
   const [view, setView] = useState<ViewChoice>('compact');
@@ -137,9 +140,12 @@ export default function App({ serverTz, tzSource, serverSnapshot }: AppProps) {
         <p>
           How to read this page: <strong className="text-zinc-700 dark:text-zinc-200">YES</strong> = safe to use now
           (off-peak or discount), <strong className="text-zinc-700 dark:text-zinc-200">NO</strong> = peak hours —
-          coding then burns through your limits fast, so wait for the next window. This page is machine-readable
-          too: point your orchestrator/coordinator bot at it and spawn every model marked YES — or use it manually
-          to pick which models to run right now.
+          coding then burns through your limits fast, so wait for the next window.
+        </p>
+        <p>
+          For agents: <code className="font-mono text-zinc-700 dark:text-zinc-200">curl -s {origin}</code> returns
+          JSON with the spawn decision per model — point your orchestrator/coordinator bot at it and spawn every
+          model marked YES, or use the badges above to pick models manually.
         </p>
         {/* Only useful for curl/no-JS hits: once JS detects the exact local timezone,
             the approximate IP line is noise for humans and disappears. */}

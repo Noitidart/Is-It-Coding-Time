@@ -188,6 +188,15 @@ export function getMinutesInTz(date: Date, tz: string): number {
   return wall.hour * 60 + wall.minute;
 }
 
+/** The three booleans the API/UI expose; off-peak and off-discount differ only in the countdown label. */
+export function statusFlags(status: ModelStatus): { canCode: boolean; discount: boolean; peak: boolean } {
+  return {
+    canCode: status !== 'peak',
+    discount: status === 'discount',
+    peak: status === 'peak',
+  };
+}
+
 export function getStatusAt(now: Date, model: ModelConfig): ModelStatus {
   const wall = getWallParts(model.timezone, now);
   const minutes = wall.hour * 60 + wall.minute;

@@ -1,19 +1,7 @@
 import { renderToString } from 'react-dom/server';
 import App from '../src/App';
 import { config } from '../src/config';
-import { computeSnapshot, type ModelSnapshot } from '../src/time';
-
-/**
- * When the YES/NO answer flips for a model — not merely when its status changes.
- * A discount window ending into off-discount keeps the answer YES, so for a YES
- * model only the next peak window's start flips it (peak is the sole NO). For a
- * NO model the current peak's end flips it back to YES.
- */
-function answerFlipAt(model: ModelSnapshot): Date | null {
-  if (model.status === 'peak') return model.boundary.at;
-  const nextPeak = model.upcoming.find((window) => window.kind === 'peak');
-  return nextPeak ? nextPeak.start : null;
-}
+import { computeSnapshot, getStatusAt, statusFlags } from '../src/time';
 
 export default {
   async fetch(request, env) {
@@ -36,25 +24,41 @@ export default {
     // This is a page request (asset is text/html), but the client doesn't want
     // HTML — bots and coordinator scripts (curl defaults to `Accept: */*`) get
     // the spawn decision in JSON. Browsers always include text/html and get the page.
-    // `yes` mirrors the badge (peak is the only NO); `until` is when the yes/no
-    // answer flips (not a mere status change — discount ending into off-discount
-    // keeps YES), and `millisUntil` counts from computedAt so bots skip date math.
+    // The booleans mirror the badge/countdown: peak is the only canCode NO, and
+    // off-discount is canCode YES without a discount. endsAt is when the current
+    // state ends, next is the state that begins then — the yes/no answer flips
+    // only when next.canCode differs from canCode. millis* count from computedAt
+    // so bots skip date math.
     const accept = request.headers.get('accept') ?? '';
     if (!accept.includes('text/html')) {
-      const models = snapshot.models.map((model) => {
-        const flip = answerFlipAt(model);
+      const models = snapshot.models.map((model, index) => {
+        // computeSnapshot maps over config.models in order, so indexes line up.
+        const modelConfig = config.models[index];
+        if (!modelConfig) {
+          throw new Error(`dev-error: no config for snapshot model ${model.id} but snapshots are computed from this config`);
+        }
+        const endsAt = model.boundary.at;
+        // Windows are half-open [start, end): the instant the current window
+        // ends, the next state already governs — so the status at the boundary
+        // is exactly the state that begins there.
+        const nextStatus = getStatusAt(endsAt, modelConfig);
         return {
           id: model.id,
-          yes: model.status !== 'peak',
-          until: flip ? flip.toISOString() : null,
-          millisUntil: flip ? flip.getTime() - now.getTime() : null
+          ...statusFlags(model.status),
+          endsAt: endsAt.toISOString(),
+          millisUntilEndsAt: endsAt.getTime() - now.getTime(),
+          next: {
+            ...statusFlags(nextStatus),
+            startsAt: endsAt.toISOString(),
+            millisUntilStartsAt: endsAt.getTime() - now.getTime()
+          }
         };
       });
       return Response.json(
         {
           computedAt: now.toISOString(),
           instruction:
-            'Can spawn every model where yes is true; do not spawn where yes is false. until is when the yes/no answer changes (null = it never changes), millisUntil is milliseconds until then, counted from computedAt.',
+            'Spawn every model where canCode is true; do not spawn where it is false. discount/peak describe the current window. endsAt is when the current state ends, next is the state that begins then (startsAt). The yes/no answer flips at startsAt only when next.canCode differs from canCode. millisUntilEndsAt/millisUntilStartsAt are milliseconds until then, counted from computedAt.',
           models
         },
         { headers: { 'Cache-Control': 'no-store' } }

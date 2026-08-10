@@ -16,11 +16,17 @@ export function badgeFor(status: ModelStatus): { text: 'YES' | 'NO'; tone: Tone 
   return { text: 'YES', tone: 'green' };
 }
 
-/** The countdown label always targets the next status change. */
+/**
+ * The countdown label always frames how much time you have left:
+ * "in" a state = until you leave it, "until" a state = until it begins.
+ */
 export function countdownFor(status: ModelStatus, boundary: ModelSnapshot['boundary']): { label: string; tone: Tone } {
-  if (status === 'peak') return { label: 'Peak ends in', tone: 'red' };
-  if (status === 'discount') return { label: 'Discount ends in', tone: 'green' };
+  if (status === 'peak') return { label: 'Can code again in', tone: 'red' };
+  if (status === 'discount') return { label: 'Time left in discount', tone: 'green' };
   // Off states: the next boundary is always the start of a window.
   const isPeakNext = boundary.kind === 'peak';
-  return { label: `${isPeakNext ? 'Peak' : 'Discount'} starts in`, tone: isPeakNext ? 'green' : 'amber' };
+  return {
+    label: isPeakNext ? 'Can code for' : 'Discount starts in',
+    tone: isPeakNext ? 'green' : 'amber',
+  };
 }

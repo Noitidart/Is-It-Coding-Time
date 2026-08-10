@@ -1,5 +1,6 @@
 import type { ModelConfig, ModelSnapshot } from '../time';
 import { formatDuration, formatTimeInTz } from '../time';
+import ModelName from './ModelName';
 import { badgeClasses, badgeFor, countdownFor } from './statusUi';
 import { toneTextClasses } from './tone';
 
@@ -18,7 +19,9 @@ export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: 
   return (
     <div className="flex items-center justify-between gap-4 rounded-xl border border-zinc-200 bg-white px-4 py-3 dark:border-white/10 dark:bg-zinc-900/60">
       <div className="min-w-0">
-        <div className="truncate font-semibold">{model.name}</div>
+        <div className="truncate font-semibold">
+          <ModelName model={model} />
+        </div>
         {countdown === null ? (
           // countdownFor returns null exactly when boundary is null (flat pricing).
           <div className="text-xs font-semibold uppercase tracking-wide text-emerald-600 dark:text-emerald-400">

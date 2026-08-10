@@ -1,5 +1,6 @@
 import type { ModelConfig, ModelSnapshot } from '../time';
 import Countdown from './Countdown';
+import ModelName from './ModelName';
 import { badgeClasses, badgeFor, countdownFor } from './statusUi';
 import UpcomingWindows from './UpcomingWindows';
 
@@ -25,7 +26,9 @@ export default function ModelCard({
     <article className="rounded-2xl border border-zinc-200 bg-white p-6 dark:border-white/10 dark:bg-zinc-900/60">
       <div className="flex items-start justify-between gap-4">
         <div className="min-w-0">
-          <h2 className="text-xl font-semibold">{model.name}</h2>
+          <h2 className="text-xl font-semibold">
+            <ModelName model={model} />
+          </h2>
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {model.note && (
               <>

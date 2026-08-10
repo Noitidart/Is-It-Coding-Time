@@ -58,6 +58,9 @@ export default function ModelCard({
           target={snapshot.boundary.at}
           now={now}
           tone={countdown.tone}
+          boundaryPreposition={countdown.boundaryPreposition}
+          displayTz={displayTz}
+          hour12={hour12}
         />
       </div>
 

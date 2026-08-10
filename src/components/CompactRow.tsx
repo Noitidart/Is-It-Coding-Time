@@ -31,7 +31,7 @@ export default function CompactRow({
         {countdown === null ? (
           // countdownFor returns null exactly when boundary is null (flat pricing or a `never` provider).
           <div
-            className={`text-xs font-semibold uppercase tracking-wide ${
+            className={`mt-1 text-xs font-semibold uppercase tracking-wide ${
               model.never
                 ? 'text-red-600 dark:text-red-400'
                 : 'text-emerald-600 dark:text-emerald-400'
@@ -41,7 +41,7 @@ export default function CompactRow({
           </div>
         ) : (
           <div
-            className={`text-xs font-semibold uppercase tracking-wide ${toneTextClasses[countdown.tone]}`}
+            className={`mt-1 text-xs font-semibold uppercase tracking-wide ${toneTextClasses[countdown.tone]}`}
           >
             {countdown.label}
           </div>

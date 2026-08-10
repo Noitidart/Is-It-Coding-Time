@@ -20,13 +20,29 @@ export function badgeFor(status: ModelStatus): { text: 'YES' | 'NO'; tone: Tone 
  * The countdown label always frames how much time you have left:
  * "in" a state = until you leave it, "until" a state = until it begins.
  */
-export function countdownFor(status: ModelStatus, boundary: ModelSnapshot['boundary']): { label: string; tone: Tone } {
-  if (status === 'peak') return { label: 'Can code again in', tone: 'red' };
-  if (status === 'discount') return { label: 'Time left in discount', tone: 'green' };
+export interface CountdownInfo {
+  label: string;
+  tone: Tone;
+  /**
+   * Preposition for the compact "… 11:00 AM" line: "until" when the countdown ends
+   * your current state (Can code for, Time left in discount), "at" when it marks a
+   * new state beginning (Can code again in, Discount starts in).
+   */
+  boundaryPreposition: 'until' | 'at';
+}
+
+export function countdownFor(status: ModelStatus, boundary: ModelSnapshot['boundary']): CountdownInfo {
+  if (status === 'peak') {
+    return { label: 'Can code again in', tone: 'red', boundaryPreposition: 'at' };
+  }
+  if (status === 'discount') {
+    return { label: 'Time left in discount', tone: 'green', boundaryPreposition: 'until' };
+  }
   // Off states: the next boundary is always the start of a window.
   const isPeakNext = boundary.kind === 'peak';
   return {
     label: isPeakNext ? 'Can code for' : 'Discount starts in',
     tone: isPeakNext ? 'green' : 'amber',
+    boundaryPreposition: isPeakNext ? 'until' : 'at',
   };
 }

@@ -29,7 +29,9 @@ export default function CompactRow({ model, snapshot, now, displayTz, hour12 }: 
       <div className="flex shrink-0 items-center gap-4">
         <div className="text-right">
           <div className="font-mono text-lg tabular-nums">{formatDuration(remainingMs)}</div>
-          <div className="text-xs text-zinc-500 dark:text-zinc-400">at {landsAt}</div>
+          <div className="text-xs text-zinc-500 dark:text-zinc-400">
+            {countdown.boundaryPreposition} {landsAt}
+          </div>
         </div>
         <div className={`rounded-md border px-3 py-1 text-lg font-bold ${badgeClasses[badge.tone]}`}>
           {badge.text}

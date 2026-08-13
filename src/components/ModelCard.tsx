@@ -32,7 +32,7 @@ export default function ModelCard({
           <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
             {model.note && (
               <>
-                {model.note}
+                <span className="whitespace-pre-line">{model.note}</span>
                 {' · '}
               </>
             )}

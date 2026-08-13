@@ -36,6 +36,14 @@
       "windows": [{ "type": "discount", "start": "00:00", "end": "08:00" }]
     },
     {
+      "id": "qwen",
+      "name": "Qwen (Alibaba - https://qwen.ai)",
+      "timezone": "Asia/Shanghai",
+      "note": "Night discount 22:00-08:00 (Asia/Shanghai); currently 50% off on qwen3.8-max (limited-time, as of 2026-08-12 — re-verify).\nThe qwen3.7 off-peak promo ran Jun 23–Jul 30, 2026 per Alibaba's blog and has ended.",
+      "sourceUrl": "https://www.alibabacloud.com/help/en/model-studio/model-pricing",
+      "windows": [{ "type": "discount", "start": "22:00", "end": "08:00" }]
+    },
+    {
       "id": "kimi",
       "name": "Kimi (Moonshot AI - https://platform.kimi.com)",
       "timezone": "Asia/Shanghai",

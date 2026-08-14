@@ -386,12 +386,14 @@ export function computeSnapshot(now: Date, config: Config): Snapshot {
   };
 }
 
-/** "1h 02m 03s" — leading units omitted when zero ("02m 03s", "45s"). */
+/** "2d 03h 04m 05s" — leading units omitted when zero ("3h 4m 5s", "4m 5s", "5s"). */
 export function formatDuration(remainingMs: number): string {
   const totalSeconds = Math.max(0, Math.floor(remainingMs / 1000));
-  const hours = Math.floor(totalSeconds / 3600);
+  const days = Math.floor(totalSeconds / 86_400);
+  const hours = Math.floor((totalSeconds % 86_400) / 3600);
   const minutes = Math.floor((totalSeconds % 3600) / 60);
   const seconds = totalSeconds % 60;
+  if (days > 0) return `${days}d ${hours}h ${minutes}m ${seconds}s`;
   if (hours > 0) return `${hours}h ${minutes}m ${seconds}s`;
   if (minutes > 0) return `${minutes}m ${seconds}s`;
   return `${seconds}s`;

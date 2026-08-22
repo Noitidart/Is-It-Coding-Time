@@ -5,7 +5,7 @@
       "id": "deepseek",
       "name": "DeepSeek (https://deepseek.com)",
       "timezone": "Asia/Shanghai",
-      "note": "2.0x Price during Peak (weekdays only; weekends are uniformly off-peak per DeepSeek billing email effective 2026-08-23)",
+      "note": "2.0x Price during Peak",
       "sourceUrl": "https://api-docs.deepseek.com/quick_start/pricing",
       "windows": [
         {

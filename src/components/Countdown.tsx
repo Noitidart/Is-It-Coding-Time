@@ -1,4 +1,4 @@
-import { formatDuration, formatTimeInTz } from '../time';
+import { formatBoundaryTime, formatDuration } from '../time';
 import { toneTextClasses, type Tone } from './tone';
 
 interface CountdownProps {
@@ -22,7 +22,7 @@ export default function Countdown({
   hour12
 }: CountdownProps) {
   const remainingMs = Math.max(0, target.getTime() - now.getTime());
-  const landsAt = formatTimeInTz(displayTz, target, hour12);
+  const landsAt = formatBoundaryTime(displayTz, target, now, hour12);
 
   return (
     <div>

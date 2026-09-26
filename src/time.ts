@@ -427,3 +427,30 @@ export function dayDifferenceInTz(tz: string, from: Date, to: Date): number {
   const toDay = Date.UTC(toWall.year, toWall.month, toWall.day);
   return Math.round((toDay - fromDay) / 86_400_000);
 }
+
+const weekdayFormatterCache = new Map<string, Intl.DateTimeFormat>();
+
+/**
+ * Boundary wall time with day context only when it is not today:
+ * "6:00 PM" today, "tomorrow at 6:00 PM" next day, "Monday at 6:00 PM" beyond.
+ */
+export function formatBoundaryTime(
+  tz: string,
+  target: Date,
+  now: Date,
+  hour12: boolean
+): string {
+  const time = formatTimeInTz(tz, target, hour12);
+  const dayDiff = dayDifferenceInTz(tz, now, target);
+  if (dayDiff <= 0) return time;
+  if (dayDiff === 1) return `tomorrow at ${time}`;
+  let formatter = weekdayFormatterCache.get(tz);
+  if (!formatter) {
+    formatter = new Intl.DateTimeFormat('en-US', {
+      timeZone: tz,
+      weekday: 'long'
+    });
+    weekdayFormatterCache.set(tz, formatter);
+  }
+  return `${formatter.format(target)} at ${time}`;
+}

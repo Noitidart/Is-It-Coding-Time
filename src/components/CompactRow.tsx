@@ -1,5 +1,5 @@
 import type { ModelConfig, ModelSnapshot } from '../time';
-import { formatDuration, formatTimeInTz } from '../time';
+import { formatBoundaryTime, formatDuration } from '../time';
 import ModelName from './ModelName';
 import { badgeClasses, badgeFor, countdownFor } from './statusUi';
 import { toneTextClasses } from './tone';
@@ -58,7 +58,12 @@ export default function CompactRow({
             </div>
             <div className="text-xs text-zinc-500 dark:text-zinc-400">
               {countdown.boundaryPreposition}{' '}
-              {formatTimeInTz(displayTz, snapshot.boundary!.at, hour12)}
+              {formatBoundaryTime(
+                displayTz,
+                snapshot.boundary!.at,
+                now,
+                hour12
+              )}
             </div>
           </div>
         )}
